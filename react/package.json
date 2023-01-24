@@ -1,6 +1,6 @@
 {
-  "name": "CHANGE_ME",
-  "version": "0.0.0",
+  "name": "icono-envio-gratis",
+  "version": "0.0.1",
   "scripts": {
     "test": "vtex-test-tools test"
   },
@@ -20,6 +20,6 @@
     "@vtex/tsconfig": "^0.4.4",
     "apollo-cache-inmemory": "^1.6.5",
     "graphql": "^14.6.0",
-    "typescript": "^3.9.6"
+    "typescript": "3.9.7"
   }
 }

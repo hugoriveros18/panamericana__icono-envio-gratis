@@ -1,0 +1,6 @@
+{
+  "icono-envio-gratis": {
+    "component": "IconoEnvioGratis",
+    "allowed": "*"
+  }
+}
