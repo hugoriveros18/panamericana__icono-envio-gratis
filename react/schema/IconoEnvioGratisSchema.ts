@@ -29,11 +29,17 @@ const IconoEnvioGratisSchema = {
           },
           "fechaInicio": {
             "title": "Fecha de inicio",
-            "type": "string"
+            "type": "string",
+            "widget": {
+              "ui:widget": "date-time"
+            }
           },
           "fechaFinal": {
             "title": "Fecha final",
-            "type": "string"
+            "type": "string",
+            "widget": {
+              "ui:widget": "date-time"
+            }
           },
           "EstaActivo": {
             "title": "Esta activo el icono?",

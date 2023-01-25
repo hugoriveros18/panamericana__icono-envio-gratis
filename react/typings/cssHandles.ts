@@ -1,7 +1,8 @@
 const CSS_HANDLES = [
-  "icono-envio-gratis-container",
+  "icono-envio-gratis_plp-container",
+  "icono-envio-gratis_pdp-container",
   "icono-envio-gratis-image",
-  "no-mostar"
+  "pdp_carusel-margin"
 ]
 
 export { CSS_HANDLES }

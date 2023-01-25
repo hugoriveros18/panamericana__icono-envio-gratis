@@ -1,6 +1,15 @@
-.icono-envio-gratis-container {
+.icono-envio-gratis_plp-container {
   max-width: 60px;
 }
+
+.icono-envio-gratis_pdp-container {
+  max-width: 100px;
+}
+
+.pdp_carusel-margin {
+  margin-right: 30px;
+}
+
 .icono-envio-gratis-image {
   width: 100%;
 }

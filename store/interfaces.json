@@ -1,6 +1,7 @@
 {
   "icono-envio-gratis": {
     "component": "IconoEnvioGratis",
-    "allowed": "*"
+    "allowed": "*",
+    "render": "client"
   }
 }

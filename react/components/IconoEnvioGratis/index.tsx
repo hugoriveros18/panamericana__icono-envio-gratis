@@ -3,10 +3,10 @@ import { useProduct } from 'vtex.product-context';
 import { useCssHandles } from 'vtex.css-handles';
 import { CSS_HANDLES } from '../../typings/cssHandles';
 import './styles.css';
-import { EnvioGratisProps } from '../../typings/definitions';
+import { Registro } from '../../typings/definitions';
 import { IconoEnvioGratisSchema } from '../../schema/IconoEnvioGratisSchema';
 
-const IconoEnvioGratis = ({referencias}:EnvioGratisProps) => {
+const IconoEnvioGratis = () => {
 
   //CONTEXTO DE PRODUCTO
   const informacionProducto = useProduct();
@@ -15,6 +15,7 @@ const IconoEnvioGratis = ({referencias}:EnvioGratisProps) => {
   const handles = useCssHandles(CSS_HANDLES);
 
   //ESTADOS
+  const [referencias, setReferencias] = useState<Registro[] | null>(null)
   const [categorias, setCategorias] = useState<string[]>([]);
   const [marcas, setMarcas] = useState<string[]>([]);
   const [colecciones, setColecciones] = useState<string[]>([]);
@@ -23,16 +24,28 @@ const IconoEnvioGratis = ({referencias}:EnvioGratisProps) => {
 
   //EFECTOS
   useEffect(() => {
-    if(informacionProducto.product !== undefined && referencias) {
+    const fecthReferencias = async () => {
+      await fetch(`/api/dataentities/EG/search?_fields=estaActivo,fechaInicio,fechaFinal,tipoReferencia,idReferencia`, {
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/vnd.vtex.ds.v10+json",
+            "REST-Range": "resources=0-100"
+        }
+      })
+        .then(res => res.json())
+        .then(res => setReferencias(res))
+    }
+    fecthReferencias();
+  },[])
+
+  useEffect(() => {
+    if(referencias) {
       referencias.forEach((referencia) => {
-        console.log(referencia.tituloReferencia)
-        console.log(referencia.tipoReferencia)
-        console.log(referencia.idReferencia)
-        if(referencia.EstaActivo) {
+        if(referencia.estaActivo) {
           const fechaHoy = new Date()
-          const inputDateInicio = new Date(referencia.fechaInicio.replace("/","T"));
-          const inputDateFinal = new Date(referencia.fechaFinal.replace("/","T"));
-          if(fechaHoy.getTime() > inputDateInicio.getTime() || fechaHoy.getTime() < inputDateFinal.getTime()) {
+          const inputDateInicio = new Date(referencia.fechaInicio.split("+")[0]);
+          const inputDateFinal = new Date(referencia.fechaFinal.split("+")[0]);
+          if(fechaHoy.getTime() > inputDateInicio.getTime() && fechaHoy.getTime() < inputDateFinal.getTime()) {
             switch(referencia.tipoReferencia) {
               case 'categoria':
                 setCategorias([...categorias,referencia.idReferencia]);
@@ -48,7 +61,7 @@ const IconoEnvioGratis = ({referencias}:EnvioGratisProps) => {
         }
       })
     }
-  }, [])
+  }, [referencias])
 
 
   useEffect(() => {
@@ -80,7 +93,7 @@ const IconoEnvioGratis = ({referencias}:EnvioGratisProps) => {
     }
     //Validacion de Categorias
     if(categorias.length > 0) {
-      const skuIdProducto = informacionProducto.product.sku.itemId;
+      const skuIdProducto = informacionProducto.product.sku ? informacionProducto.product.sku.itemId : informacionProducto.selectedItem.itemId;
       const fecthPathCategoria = async (skuId:string) => {
         await fetch(`/api/catalog_system/pvt/sku/stockkeepingunitbyid/${skuId}`, {
           headers: {
@@ -111,7 +124,14 @@ const IconoEnvioGratis = ({referencias}:EnvioGratisProps) => {
   //JSX
   if(iconoActivo) {
     return(
-      <div className={`${handles['icono-envio-gratis-container']}`}>
+      <div
+        className={
+          `
+          ${informacionProducto.product.sku ? handles['icono-envio-gratis_plp-container'] : handles['icono-envio-gratis_pdp-container']}
+          ${(informacionProducto.product.sku === undefined && informacionProducto.selectedItem.images.length > 1) && handles['pdp_carusel-margin']}
+          `
+        }
+      >
         <img
           src="https://panamericana.vteximg.com.br/arquivos/Envio-gratis-icono.png"
           alt="Icono Envio Gratis"
