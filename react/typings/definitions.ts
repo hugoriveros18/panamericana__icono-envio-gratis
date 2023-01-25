@@ -3,21 +3,17 @@ type Registro = {
   idReferencia: string
   fechaInicio: string
   fechaFinal: string
+  urlImagenIcono: string
   estaActivo: boolean
-}
-
-type ResumenReferencias = {
-  categorias: string[]
-  marcas: string[]
-  colecciones: string[]
 }
 
 type EnvioGratisProps = {
   referencias: Registro[]
 }
 
-type IconoRenderComponentProps = {
-  children: any
+type ReferenciaImagen = {
+  id: string
+  urlImagen: string
 }
 
-export { EnvioGratisProps, ResumenReferencias, Registro, IconoRenderComponentProps }
+export { EnvioGratisProps, Registro, ReferenciaImagen }

@@ -5,6 +5,7 @@ import { CSS_HANDLES } from '../../typings/cssHandles';
 import './styles.css';
 import { Registro } from '../../typings/definitions';
 import { IconoEnvioGratisSchema } from '../../schema/IconoEnvioGratisSchema';
+import { ReferenciaImagen } from '../../typings/definitions';
 
 const IconoEnvioGratis = () => {
 
@@ -16,16 +17,17 @@ const IconoEnvioGratis = () => {
 
   //ESTADOS
   const [referencias, setReferencias] = useState<Registro[] | null>(null)
-  const [categorias, setCategorias] = useState<string[]>([]);
-  const [marcas, setMarcas] = useState<string[]>([]);
-  const [colecciones, setColecciones] = useState<string[]>([]);
+  const [categorias, setCategorias] = useState<ReferenciaImagen[]>([]);
+  const [marcas, setMarcas] = useState<ReferenciaImagen[]>([]);
+  const [colecciones, setColecciones] = useState<ReferenciaImagen[]>([]);
   const [pathCategorias, setPathCategorias] = useState<string[]>([]);
   const [iconoActivo,setIconoActivo] = useState<boolean>(false);
+  const [imagenIconoActiva, setImagenIconoActiva] = useState<string>('');
 
   //EFECTOS
   useEffect(() => {
     const fecthReferencias = async () => {
-      await fetch(`/api/dataentities/EG/search?_fields=estaActivo,fechaInicio,fechaFinal,tipoReferencia,idReferencia`, {
+      await fetch(`/api/dataentities/EG/search?_fields=estaActivo,fechaInicio,fechaFinal,tipoReferencia,urlImagenIcono,idReferencia`, {
         headers: {
             "Content-Type": "application/json",
             "Accept": "application/vnd.vtex.ds.v10+json",
@@ -46,15 +48,19 @@ const IconoEnvioGratis = () => {
           const inputDateInicio = new Date(referencia.fechaInicio.split("+")[0]);
           const inputDateFinal = new Date(referencia.fechaFinal.split("+")[0]);
           if(fechaHoy.getTime() > inputDateInicio.getTime() && fechaHoy.getTime() < inputDateFinal.getTime()) {
+            const IdImagenReferencia: ReferenciaImagen = {
+              id: referencia.idReferencia,
+              urlImagen: referencia.urlImagenIcono
+            };
             switch(referencia.tipoReferencia) {
               case 'categoria':
-                setCategorias([...categorias,referencia.idReferencia]);
+                setCategorias([...categorias, IdImagenReferencia]);
                 break;
               case 'marca':
-                setMarcas([...marcas,referencia.idReferencia]);
+                setMarcas([...marcas, IdImagenReferencia]);
                 break;
               case 'coleccion':
-                setColecciones([...colecciones,referencia.idReferencia])
+                setColecciones([...colecciones, IdImagenReferencia])
                 break;
             }
           }
@@ -70,22 +76,13 @@ const IconoEnvioGratis = () => {
     }
     //Validacion de Colecciones
     if(colecciones.length > 0) {
-      const coleccionesProducto = informacionProducto.product.productClusters;
-      for(let coleccion of coleccionesProducto) {
-        if(colecciones.includes(coleccion.id)) {
+      const coleccionesProducto: string[] = informacionProducto.product.productClusters.map((col:any) => col.id);
+      for(let coleccion of colecciones) {
+        if(coleccionesProducto.includes(coleccion.id)) {
           setIconoActivo(true);
+          setImagenIconoActiva(coleccion.urlImagen);
           break;
         }
-      }
-    }
-    if(iconoActivo) {
-      return
-    }
-    //Validacion de Marcas
-    if(marcas.length > 0) {
-      const idMarcaProducto = `${informacionProducto.product.brandId}`;
-      if(marcas.includes(idMarcaProducto)) {
-        setIconoActivo(true);
       }
     }
     if(iconoActivo) {
@@ -106,14 +103,28 @@ const IconoEnvioGratis = () => {
       }
       fecthPathCategoria(skuIdProducto)
     }
+    if(iconoActivo) {
+      return
+    }
+    //Validacion de Marcas
+    if(marcas.length > 0) {
+      const idMarcaProducto = `${informacionProducto.product.brandId}`;
+      for(let marca of marcas) {
+        if(marca.id == idMarcaProducto) {
+          setIconoActivo(true);
+          setImagenIconoActiva(marca.urlImagen);
+        }
+      }
+    }
   },[categorias,marcas,colecciones])
 
 
   useEffect(() => {
     if(pathCategorias.length > 0) {
       for(let categoria of categorias) {
-        if(pathCategorias.includes(categoria)) {
+        if(pathCategorias.includes(categoria.id)) {
           setIconoActivo(true);
+          setImagenIconoActiva(categoria.urlImagen);
           break;
         }
       }
@@ -133,7 +144,7 @@ const IconoEnvioGratis = () => {
         }
       >
         <img
-          src="https://panamericana.vteximg.com.br/arquivos/Envio-gratis-icono.png"
+          src={imagenIconoActiva}
           alt="Icono Envio Gratis"
           className={`${handles['icono-envio-gratis-image']}`}
         />
