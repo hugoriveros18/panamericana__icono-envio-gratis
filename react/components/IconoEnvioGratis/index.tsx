@@ -22,12 +22,13 @@ const IconoEnvioGratis = () => {
   const [colecciones, setColecciones] = useState<ReferenciaImagen[]>([]);
   const [pathCategorias, setPathCategorias] = useState<string[]>([]);
   const [iconoActivo,setIconoActivo] = useState<boolean>(false);
-  const [imagenIconoActiva, setImagenIconoActiva] = useState<string>('');
+  const [finalizoValidacion,setFinalizoValidacion] = useState<boolean>(false);
+  const [imagenIconoActiva, setImagenIconoActiva] = useState<string>('https://panamericana.vtexassets.com/arquivos/Envio-gratis-icono.png');
 
   //EFECTOS
   useEffect(() => {
     const fecthReferencias = async () => {
-      await fetch(`/api/dataentities/EG/search?_fields=estaActivo,fechaInicio,fechaFinal,tipoReferencia,urlImagenIcono,idReferencia`, {
+      await fetch(`/api/dataentities/RG/search?_fields=estaActivo,fechaInicio,fechaFinal,tipoReferencia,urlImagenIcono,idReferencia`, {
         headers: {
             "Content-Type": "application/json",
             "Accept": "application/vnd.vtex.ds.v10+json",
@@ -38,6 +39,8 @@ const IconoEnvioGratis = () => {
         .then(res => setReferencias(res))
     }
     fecthReferencias();
+    console.log(informacionProducto.product.productName)
+    console.log(informacionProducto.product.productClusters)
   },[])
 
   useEffect(() => {
@@ -66,12 +69,13 @@ const IconoEnvioGratis = () => {
           }
         }
       })
+      setFinalizoValidacion(true);
     }
   }, [referencias])
 
 
   useEffect(() => {
-    if(iconoActivo) {
+    if(!setFinalizoValidacion) {
       return
     }
     //Validacion de Colecciones
@@ -116,7 +120,7 @@ const IconoEnvioGratis = () => {
         }
       }
     }
-  },[categorias,marcas,colecciones])
+  },[finalizoValidacion])
 
 
   useEffect(() => {
