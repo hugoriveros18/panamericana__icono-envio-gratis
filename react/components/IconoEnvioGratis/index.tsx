@@ -31,7 +31,7 @@ const IconoEnvioGratis = () => {
         headers: {
             "Content-Type": "application/json",
             "Accept": "application/vnd.vtex.ds.v10+json",
-            "REST-Range": "resources=0-100"
+            "REST-Range": "resources=0-99"
         }
       })
         .then(res => res.json())
