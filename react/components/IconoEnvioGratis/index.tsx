@@ -39,8 +39,6 @@ const IconoEnvioGratis = () => {
         .then(res => setReferencias(res))
     }
     fecthReferencias();
-    console.log(informacionProducto.product.productName)
-    console.log(informacionProducto.product.productClusters)
   },[])
 
   useEffect(() => {

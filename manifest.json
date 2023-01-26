@@ -1,7 +1,7 @@
 {
   "vendor": "panamericana",
   "name": "icono-envio-gratis",
-  "version": "0.0.4",
+  "version": "0.0.6",
   "title": "Icono de envío gratis",
   "description": "Icono en la informacion de producto para indicar que cuenta con envío gratis",
   "builders": {
