@@ -25,6 +25,7 @@ const IconoEnvioGratis = () => {
   const [finalizoValidacion,setFinalizoValidacion] = useState<boolean>(false);
   const [imagenIconoActiva, setImagenIconoActiva] = useState<string>('https://panamericana.vtexassets.com/arquivos/Envio-gratis-icono.png');
 
+
   //EFECTOS
   useEffect(() => {
     const fecthReferencias = async () => {
@@ -43,6 +44,9 @@ const IconoEnvioGratis = () => {
 
   useEffect(() => {
     if(referencias) {
+      let categoriasInput: ReferenciaImagen[] = [];
+      let marcasInput: ReferenciaImagen[] = [];
+      let coleccionesInput: ReferenciaImagen[] = [];
       referencias.forEach((referencia) => {
         if(referencia.estaActivo) {
           const fechaHoy = new Date()
@@ -53,27 +57,26 @@ const IconoEnvioGratis = () => {
               id: referencia.idReferencia,
               urlImagen: referencia.urlImagenIcono
             };
-            switch(referencia.tipoReferencia) {
-              case 'categoria':
-                setCategorias([...categorias, IdImagenReferencia]);
-                break;
-              case 'marca':
-                setMarcas([...marcas, IdImagenReferencia]);
-                break;
-              case 'coleccion':
-                setColecciones([...colecciones, IdImagenReferencia])
-                break;
+            if(referencia.tipoReferencia === 'categoria') {
+              categoriasInput.push(IdImagenReferencia);
+            } else if (referencia.tipoReferencia === 'marca') {
+              marcasInput.push(IdImagenReferencia);
+            } else if (referencia.tipoReferencia === 'coleccion'){
+              coleccionesInput.push(IdImagenReferencia);
             }
           }
         }
       })
+      setCategorias(categoriasInput);
+      setMarcas(marcasInput);
+      setColecciones(coleccionesInput);
       setFinalizoValidacion(true);
     }
   }, [referencias])
 
 
   useEffect(() => {
-    if(!setFinalizoValidacion) {
+    if(!finalizoValidacion) {
       return
     }
     //Validacion de Colecciones
