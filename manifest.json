@@ -1,9 +1,9 @@
 {
   "vendor": "panamericana",
-  "name": "icono-envio-gratis",
-  "version": "0.0.7",
-  "title": "Icono de envío gratis",
-  "description": "Icono en la informacion de producto para indicar que cuenta con envío gratis",
+  "name": "product-flag",
+  "version": "0.0.1",
+  "title": "Product Flag",
+  "description": "Flag en la vitrina de producto que indica una oferta o servicio por tiempo limitado",
   "builders": {
     "react": "3.x",
     "messages": "1.x",
@@ -14,9 +14,7 @@
     "vtex.product-context": "0.x",
     "vtex.css-handles": "0.x"
   },
-  "registries": [
-    "smartcheckout"
-  ],
+  "registries": ["smartcheckout"],
   "policies": [],
   "$schema": "https://raw.githubusercontent.com/vtex/node-vtex-api/master/gen/manifest.schema"
 }
